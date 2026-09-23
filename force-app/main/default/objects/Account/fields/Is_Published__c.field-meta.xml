@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Is_Published__c</fullName>
+    <label>Is Published</label>
+    <type>Checkbox</type>
+    <defaultValue>false</defaultValue>
+    <description>When checked, this Property is publicly visible on the website. A Flow validates required fields are complete before allowing this to stay checked.</description>
+</CustomField>

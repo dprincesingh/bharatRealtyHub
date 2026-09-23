@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomNotificationType xmlns="http://soap.sforce.com/2006/04/metadata">
+    <customNotifTypeName>Property_Published</customNotifTypeName>
+    <masterLabel>Property Published</masterLabel>
+    <desktop>true</desktop>
+    <mobile>true</mobile>
+    <description>Notifies when a Property record has been successfully published to the website.</description>
+</CustomNotificationType>

@@ -1,0 +1,135 @@
+:host {
+    --lux-gold: #a9812c;
+    --lux-gold-dark: #8a6a20;
+    --lux-cream: #faf6ee;
+    --lux-card: #fffdf8;
+    --lux-border: #e3d6b8;
+    --lux-heading: #362a1b;
+    --lux-body: #5c4f3d;
+}
+
+.enquiry-page {
+    background: var(--lux-cream);
+    padding: 48px 16px;
+    min-height: 100%;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    box-sizing: border-box;
+}
+
+.enquiry-card {
+    max-width: 480px;
+    margin: 0 auto;
+    background: var(--lux-card);
+    border: 1px solid var(--lux-border);
+    border-radius: 4px;
+    box-shadow: 0 12px 40px rgba(54, 42, 27, 0.08);
+    padding: 40px 36px;
+}
+
+.enquiry-header,
+.thank-you {
+    text-align: center;
+    margin-bottom: 28px;
+}
+
+.eyebrow {
+    margin: 0 0 8px;
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--lux-gold);
+    font-weight: 600;
+}
+
+.title {
+    margin: 0;
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 30px;
+    font-weight: 400;
+    color: var(--lux-heading);
+    letter-spacing: 0.5px;
+}
+
+.divider {
+    width: 56px;
+    height: 2px;
+    background: var(--lux-gold);
+    margin: 16px auto 20px;
+}
+
+.property-line {
+    margin: 0;
+    font-size: 14px;
+    color: var(--lux-body);
+    line-height: 1.6;
+}
+
+.property-line strong {
+    color: var(--lux-heading);
+    font-weight: 600;
+}
+
+.listing-tag {
+    display: inline-block;
+    margin-left: 6px;
+    padding: 2px 10px;
+    border: 1px solid var(--lux-gold);
+    border-radius: 20px;
+    font-size: 11px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--lux-gold-dark);
+}
+
+.lux-field {
+    display: block;
+    margin-top: 18px;
+    --slds-c-input-color-background: #fffefb;
+    --slds-c-input-color-border: var(--lux-border);
+    --slds-c-input-radius-border: 2px;
+    --slds-c-input-text-color: var(--lux-heading);
+    --slds-c-input-color-border-focus: var(--lux-gold);
+    --slds-c-input-shadow-focus: 0 0 0 1px var(--lux-gold);
+    --slds-c-textarea-color-border: var(--lux-border);
+    --slds-c-textarea-radius-border: 2px;
+    --slds-c-textarea-color-border-focus: var(--lux-gold);
+}
+
+.lux-submit {
+    display: block;
+    margin-top: 30px;
+    --slds-c-button-brand-color-background: var(--lux-gold);
+    --slds-c-button-brand-color-background-hover: var(--lux-gold-dark);
+    --slds-c-button-brand-color-border: var(--lux-gold);
+    --slds-c-button-brand-text-color: #fff;
+    --slds-c-button-radius-border: 2px;
+}
+
+.lux-submit lightning-button,
+.lux-submit {
+    width: 100%;
+}
+
+.error-text {
+    margin: 16px 0 0;
+    color: #a33b2c;
+    font-size: 13px;
+}
+
+.checkmark {
+    width: 52px;
+    height: 52px;
+    line-height: 52px;
+    border-radius: 50%;
+    border: 2px solid var(--lux-gold);
+    color: var(--lux-gold);
+    font-size: 24px;
+    margin: 8px auto 18px;
+}
+
+.thank-you-text {
+    margin: 0;
+    color: var(--lux-body);
+    font-size: 14px;
+    line-height: 1.7;
+}

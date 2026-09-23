@@ -1,0 +1,85 @@
+<template>
+    <div class="enquiry-page">
+        <div class="enquiry-card">
+            <template if:false={submitted}>
+                <div class="enquiry-header">
+                    <p class="eyebrow">Bharat Realty Hub</p>
+                    <h1 class="title">Property Enquiry</h1>
+                    <div class="divider"></div>
+                    <p class="property-line">
+                        You're enquiring about <strong>{propertyName}</strong>
+                        <span class="listing-tag">{listingType}</span>
+                    </p>
+                </div>
+
+                <lightning-input
+                    label="First Name"
+                    value={firstName}
+                    onchange={handleChange}
+                    data-field="firstName"
+                    required
+                    class="lux-field"
+                ></lightning-input>
+
+                <lightning-input
+                    label="Last Name"
+                    value={lastName}
+                    onchange={handleChange}
+                    data-field="lastName"
+                    required
+                    class="lux-field"
+                ></lightning-input>
+
+                <lightning-input
+                    type="email"
+                    label="Email"
+                    value={email}
+                    onchange={handleChange}
+                    data-field="email"
+                    required
+                    class="lux-field"
+                ></lightning-input>
+
+                <lightning-input
+                    type="tel"
+                    label="Phone"
+                    value={phone}
+                    onchange={handleChange}
+                    data-field="phone"
+                    required
+                    class="lux-field"
+                ></lightning-input>
+
+                <lightning-textarea
+                    label="Message (optional)"
+                    value={message}
+                    onchange={handleChange}
+                    data-field="message"
+                    class="lux-field"
+                ></lightning-textarea>
+
+                <template if:true={errorMessage}>
+                    <p class="error-text">{errorMessage}</p>
+                </template>
+
+                <lightning-button
+                    variant="brand"
+                    label="Submit Enquiry"
+                    onclick={handleSubmit}
+                    disabled={isSubmitting}
+                    class="lux-submit"
+                ></lightning-button>
+            </template>
+
+            <template if:true={submitted}>
+                <div class="thank-you">
+                    <p class="eyebrow">Bharat Realty Hub</p>
+                    <div class="checkmark">✓</div>
+                    <h1 class="title">Thank You</h1>
+                    <div class="divider"></div>
+                    <p class="thank-you-text">Your enquiry has been received. Our team will be in touch with you shortly.</p>
+                </div>
+            </template>
+        </div>
+    </div>
+</template>
