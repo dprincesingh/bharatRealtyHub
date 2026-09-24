@@ -121,10 +121,7 @@
         <label>Check Required Fields</label>
         <locationX>176</locationX>
         <locationY>134</locationY>
-        <defaultConnector>
-            <targetReference>Build_Recipient_List</targetReference>
-        </defaultConnector>
-        <defaultConnectorLabel>All Fields Complete</defaultConnectorLabel>
+        <defaultConnectorLabel>No Action Needed</defaultConnectorLabel>
         <rules>
             <name>Missing_Fields</name>
             <conditionLogic>and</conditionLogic>
@@ -140,11 +137,38 @@
             </connector>
             <label>Missing Fields</label>
         </rules>
+        <rules>
+            <name>Fields_Complete_And_Just_Published</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>Missing_Required_Fields</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>Just_Became_Published</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Build_Recipient_List</targetReference>
+            </connector>
+            <label>Fields Complete And Just Published</label>
+        </rules>
     </decisions>
     <formulas>
         <name>Missing_Required_Fields</name>
         <dataType>Boolean</dataType>
         <expression>ISBLANK(TEXT({!$Record.Property_Type__c})) || ISBLANK(TEXT({!$Record.Listing_Type__c})) || ISBLANK(TEXT({!$Record.Status__c})) || ISNULL({!$Record.Price__c}) || ISNULL({!$Record.Bedrooms__c}) || ISNULL({!$Record.Bathrooms__c}) || ISNULL({!$Record.Area_Sqft__c}) || ISBLANK({!$Record.Description__c}) || ISBLANK({!$Record.Property_Image_URL__c})</expression>
+    </formulas>
+    <formulas>
+        <name>Just_Became_Published</name>
+        <dataType>Boolean</dataType>
+        <expression>ISCHANGED({!$Record.Is_Published__c})</expression>
     </formulas>
     <interviewLabel>Property Publish Validation {!$Flow.CurrentDateTime}</interviewLabel>
     <label>Property Publish Validation</label>

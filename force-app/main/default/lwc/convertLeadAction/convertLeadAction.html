@@ -1,0 +1,27 @@
+<template>
+    <div class="slds-p-around_medium">
+        <p class="slds-m-bottom_medium">
+            Convert this Lead into a Contact and Opportunity, linked to the property it enquired about?
+            No new Account will be created — the existing Property Account will be used.
+        </p>
+
+        <template if:true={errorMessage}>
+            <p class="slds-text-color_error slds-m-bottom_small">{errorMessage}</p>
+        </template>
+
+        <div class="slds-grid slds-grid_align-end">
+            <lightning-button
+                label="Cancel"
+                onclick={handleCancel}
+                class="slds-m-right_small"
+                disabled={isConverting}
+            ></lightning-button>
+            <lightning-button
+                variant="brand"
+                label="Convert"
+                onclick={handleConfirm}
+                disabled={isConverting}
+            ></lightning-button>
+        </div>
+    </div>
+</template>
