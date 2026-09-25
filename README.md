@@ -95,14 +95,39 @@ This is the natural next step: a website enquiry shouldn't just sit as a Lead fo
 
 **Not done (deliberately out of scope for BRH-8):** `Message__c` isn't currently mapped onto the Contact/Opportunity — still living only on the original (now converted) Lead.
 
-### BRH-9 — Opportunity linked to Property, with a Property field for "Under Offer"
-**Status:** Backlog | **Priority:** P2
-As a sales rep, when an Opportunity reaches a certain stage, the Property should reflect that it's under offer (not just "Available"), so other visitors browsing the website don't enquire about something already being negotiated.
-- Consider: does this need automation (Flow on Opportunity stage change → update `Status__c` on the related Property), or is it fine to do manually for now?
+### BRH-9 — Opportunity Negotiation → Property "Under Offer"
+**Status:** Done | **Priority:** P2
+
+As a sales rep, when an Opportunity reaches Negotiation, the Property should reflect that it's under offer (not just "Available"), so anyone looking at the Property record knows there's an active deal being worked.
+
+**What got built:**
+- Record-Triggered Flow **`Opportunity_Under_Offer`** on Opportunity — After Save, entry condition `StageName = 'Negotiation'`, guarded with a `ISCHANGED(StageName)` formula (same lesson as `Property_Publish_Validation`: without this, any unrelated touch to an Opportunity already sitting in Negotiation would re-fire the update every time)
+- On match: updates the related Property Account (`Opportunity.AccountId`) → `Status__c = 'Under Offer'`
+- Fault path logs to `Error_Log__c` via `ErrorLogger`, same pattern as every other Flow in this org
+
+**Decision (deliberate):** forward-only, no auto-revert. If the Opportunity later leaves Negotiation (lost, or pushed back a stage), the Property does **not** automatically revert to "Available" — an admin does that manually. Reasoning: a Property can have more than one Opportunity against it (e.g. two interested parties), so auto-reverting on one Opportunity leaving Negotiation isn't safe — it could incorrectly reopen a Property still being negotiated with someone else. Handling that properly would mean querying sibling Opportunities, which wasn't worth the added complexity for this story.
+
+**Verified:** moved a test Opportunity to Negotiation → linked Property (`Golden Acres Farmhouse`) flipped to `Under Offer` within ~20 seconds, no errors logged.
 
 ### BRH-10 — Opportunity close → Property status update
-**Status:** Backlog | **Priority:** P2
-When an Opportunity is Closed Won, the Property's `Status__c` should move to Sold/Rented, and (tying back to a gap identified earlier) `Is_Published__c` should be automatically unchecked so it stops showing as available on the live website.
+**Status:** Done | **Priority:** P2
+
+When an Opportunity is Closed Won, the Property's `Status__c` should move to Sold/Rented, and `Is_Published__c` should be automatically unchecked so it stops showing as available on the live website.
+
+**What got built:** Record-Triggered Flow **`Opportunity_Closed_Won_Property_Update`** on Opportunity — After Save, entry condition `StageName = 'Closed Won'`, same `ISCHANGED` guard pattern. Updates the related Property: `Status__c = 'Sold'` if `Purchase_Type__c = 'Buy'`, or `'Rented'` if `'Rent'`; `Is_Published__c = false` either way. Fault path logs to `Error_Log__c`.
+
+This was originally built as part of the BRH-11 DocuSign exploration (see below) but is independent of *how* an Opportunity reaches Closed Won — it was kept when that feature's other parts were reverted, and will work unchanged once DocuSign (or anything else) sets the stage.
+
+### BRH-11 — Contract Generation & E-Signature
+**Status:** Parked | **Priority:** —
+
+Explored two paths: a DIY in-house signing page (guest LWC + Apex, same pattern as the enquiry form) and DocuSign. Built and fully tested the DIY version end-to-end (send → view → sign → Closed Won cascade all worked), then reverted it entirely — decided real e-signature via DocuSign was the better fit going forward, not a custom-built signer.
+
+**DocuSign findings so far:**
+- The "DocuSign for Salesforce" AppExchange managed package is **paid** ($30/user/month) — not viable for a learning project, so that path is out
+- Pivoted to the free path instead: DocuSign's own Developer/sandbox account (free) + custom Apex calling the DocuSign eSignature REST API directly (JWT Bearer auth via a Salesforce Named Credential, no AppExchange purchase needed)
+- A contract Word template with merge-field placeholders (buyer, property details, price, term, and a property-photo link) was drafted and saved locally at `docusign/Property_Agreement_Template.docx` (not committed to this repo), ready to upload into DocuSign once the API integration is connected
+- Setup was paused before completing DocuSign's Integration Key / RSA keypair / consent steps — pick back up there when ready
 
 ---
 
