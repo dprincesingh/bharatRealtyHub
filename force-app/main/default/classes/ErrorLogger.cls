@@ -53,11 +53,34 @@ public without sharing class ErrorLogger {
         );
     }
 
+    // Published as a Platform Event instead of inserted directly. An @AuraEnabled method
+    // that throws an exception back to a Lightning/LWC caller makes Salesforce roll back
+    // ALL DML performed during that transaction - including an Error_Log__c we just inserted
+    // right before the throw. Platform Events are the documented exception to that rollback:
+    // once published, they survive even if the rest of the transaction later fails.
+    // A subscriber trigger (ErrorLogEventTrigger) does the actual Error_Log__c insert.
     private static void insertLogs(List<Error_Log__c> logs) {
-        try {
-            insert logs;
-        } catch (Exception e) {
-            System.debug(LoggingLevel.ERROR, 'ErrorLogger failed to insert Error_Log__c records: ' + e.getMessage());
+        if (logs.isEmpty()) {
+            return;
+        }
+        List<Error_Log_Event__e> events = new List<Error_Log_Event__e>();
+        for (Error_Log__c logRecord : logs) {
+            events.add(new Error_Log_Event__e(
+                Error_Message__c = logRecord.Error_Message__c,
+                Stack_Trace__c = logRecord.Stack_Trace__c,
+                Source__c = logRecord.Source__c,
+                Object_Type__c = logRecord.Object_Type__c,
+                Record_Id__c = logRecord.Record_Id__c,
+                Severity__c = logRecord.Severity__c,
+                Context__c = logRecord.Context__c
+            ));
+        }
+
+        List<Database.SaveResult> results = EventBus.publish(events);
+        for (Database.SaveResult result : results) {
+            if (!result.isSuccess()) {
+                System.debug(LoggingLevel.ERROR, 'ErrorLogger failed to publish Error_Log_Event__e: ' + result.getErrors());
+            }
         }
     }
 }
