@@ -119,15 +119,17 @@ When an Opportunity is Closed Won, the Property's `Status__c` should move to Sol
 This was originally built as part of the BRH-11 DocuSign exploration (see below) but is independent of *how* an Opportunity reaches Closed Won — it was kept when that feature's other parts were reverted, and will work unchanged once DocuSign (or anything else) sets the stage.
 
 ### BRH-11 — Contract Generation & E-Signature
-**Status:** Parked | **Priority:** —
+**Status:** Dropped (for now) | **Priority:** —
 
-Explored two paths: a DIY in-house signing page (guest LWC + Apex, same pattern as the enquiry form) and DocuSign. Built and fully tested the DIY version end-to-end (send → view → sign → Closed Won cascade all worked), then reverted it entirely — decided real e-signature via DocuSign was the better fit going forward, not a custom-built signer.
+Explored two paths: a DIY in-house signing page (guest LWC + Apex, same pattern as the enquiry form) and DocuSign. Built and fully tested the DIY version end-to-end (send → view → sign → Closed Won cascade all worked), then reverted it entirely — decided real e-signature via DocuSign was the better fit, not a custom-built signer.
 
-**DocuSign findings so far:**
-- The "DocuSign for Salesforce" AppExchange managed package is **paid** ($30/user/month) — not viable for a learning project, so that path is out
-- Pivoted to the free path instead: DocuSign's own Developer/sandbox account (free) + custom Apex calling the DocuSign eSignature REST API directly (JWT Bearer auth via a Salesforce Named Credential, no AppExchange purchase needed)
-- A contract Word template with merge-field placeholders (buyer, property details, price, term, and a property-photo link) was drafted and saved locally at `docusign/Property_Agreement_Template.docx` (not committed to this repo), ready to upload into DocuSign once the API integration is connected
-- Setup was paused before completing DocuSign's Integration Key / RSA keypair / consent steps — pick back up there when ready
+**DocuSign turned out not to be usable in this org, at least for now:**
+- The "DocuSign for Salesforce" AppExchange managed package is **paid** ($30/user/month) — ruled out for a learning project
+- Pivoted to the free path (DocuSign Developer account + custom Apex calling the eSignature REST API directly, JWT Bearer auth via Named Credential, no purchase needed) — but this was also called off before completion
+- **Decision: DocuSign is off the table entirely for now.** Not an active next step — revisit only if it becomes relevant again later
+- A contract Word template with merge-field placeholders (buyer, property details, price, term, property-photo link) still exists locally at `docusign/Property_Agreement_Template.docx` (not committed to this repo) if this gets picked back up
+
+**What this means for signing a real deal today:** there's no e-signature path currently wired up. An Opportunity reaches Closed Won manually (an admin/rep changes the Stage directly) — BRH-10's automation still fires correctly from that regardless of how the stage change happens.
 
 ---
 
